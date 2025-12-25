@@ -18,7 +18,7 @@ namespace ViewModel
         }
 
 
-    protected override BaseEntity CreateModel(BaseEntity entity)
+        protected override BaseEntity CreateModel(BaseEntity entity)
         {
             Subject p = entity as Subject;
             p.Subject_name = reader["subject_name"].ToString();
@@ -39,43 +39,48 @@ namespace ViewModel
             Subject g = list.Find(item => item.Id == id);
             return g;
         }
+
+        
+        protected override void CreateInsertdSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            Subject c = entity as Subject;
+            if (c != null)
+            {
+                string sqlStr = $"Insert INTO  Subject (Subject_name) VALUES (@cSubject_name)";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@cSubject_name", c.Subject_name));
+            }
+        }
+
+
+        protected override void CreateUpdatedSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+           Subject c = entity as Subject;
+            if (c != null)
+            {
+                string sqlStr = $"UPDATE Subject  SET Subject_name=@cSubject_name WHERE ID=@id";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@cSubject_name", c.Subject_name));
+                command.Parameters.Add(new OleDbParameter("@id", c.Id));
+            }
+        }
+        protected override void CreateDeletedSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            Subject c = entity as Subject;
+            if (c != null)
+            {
+                string sqlStr = $"DELETE FROM Subject where id=@pid";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@pid", c.Id));
+            }
+        }
+
+
+
+
     }
-
-
 }
-//שלב ב
-//protected override void CreateDeletedSQL(BaseEntity entity, OleDbCommand cmd)
-//{
-//    Person c = entity as Person;
-//    if (c != null)
-//    {
-//        string sqlStr = $"DELETE FROM PersonTbl where id=@pid";
 
-//        command.CommandText = sqlStr;
-//        command.Parameters.Add(new OleDbParameter("@pid", c.Id));
-//    }
-//}
-//protected override void CreateInsertdSQL(BaseEntity entity, OleDbCommand cmd)
-//{
-//    Person c = entity as Person;
-//    if (c != null)
-//    {
-//        string sqlStr = $"Insert INTO  PersonTbl (PersonName) VALUES (@cName)";
-
-//        command.CommandText = sqlStr;
-//        command.Parameters.Add(new OleDbParameter("@cName", c.PersonName));
-//    }
-//}
-
-//protected override void CreateUpdatedSQL(BaseEntity entity, OleDbCommand cmd)
-//{
-//    Person c = entity as Person;
-//    if (c != null)
-//    {
-//        string sqlStr = $"UPDATE PersonTbl  SET PersonName=@cName WHERE ID=@id";
-
-//        command.CommandText = sqlStr;
-//        command.Parameters.Add(new OleDbParameter("@cName", c.PersonName));
-//        command.Parameters.Add(new OleDbParameter("@id", c.Id));
-//    }
-//}

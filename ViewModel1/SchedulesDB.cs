@@ -42,43 +42,56 @@ namespace ViewModel
             Schedules g = list.Find(item => item.Id == id);
             return g;
         }
+
+      
+        protected override void CreateInsertdSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            Schedules c = entity as Schedules;
+            if (c != null)
+            {
+                string sqlStr = $"Insert INTO Schedules (User_id,Day_of_the_week,Hour,Subject_id) VALUES (@cUser_id,@cDay_of_the_week,@cHour,@cSubject_id)";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@cUser_id", c.User_id));
+                command.Parameters.Add(new OleDbParameter("@cDay_of_the_week", c.Day_of_the_week));
+                command.Parameters.Add(new OleDbParameter("@cHour", c.Hour));
+                command.Parameters.Add(new OleDbParameter("@cSubject_id", c.Subject_id));
+            }
+        }
+
+        protected override void CreateUpdatedSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            Schedules c = entity as Schedules;
+            if (c != null)
+            {
+                string sqlStr = $"UPDATE Schedules SET Day_of_the_week=@day_of_week, User_id=@user_id, [Hour]=@chour, " +
+                    $"Subject_id=@subject_id WHERE ID=@id";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@day_of_week", c.Day_of_the_week));
+                command.Parameters.Add(new OleDbParameter("@user_id", c.User_id.Id));
+                command.Parameters.Add(new OleDbParameter("@chour", c.Hour));
+                command.Parameters.Add(new OleDbParameter("@subject_id", c.Subject_id.Id));
+                command.Parameters.Add(new OleDbParameter("@id", c.Id));
+            }
+        }
+        protected override void CreateDeletedSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            Schedules c = entity as Schedules;
+            if (c != null)
+            {
+                string sqlStr = $"DELETE FROM Schedules where id=@pid";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@pid", c.Id));
+            }
+        }
+
+
+
     }
 
 
 }
-//שלב ב
-//protected override void CreateDeletedSQL(BaseEntity entity, OleDbCommand cmd)
-//{
-//    Person c = entity as Person;
-//    if (c != null)
-//    {
-//        string sqlStr = $"DELETE FROM PersonTbl where id=@pid";
 
-//        command.CommandText = sqlStr;
-//        command.Parameters.Add(new OleDbParameter("@pid", c.Id));
-//    }
-//}
-//protected override void CreateInsertdSQL(BaseEntity entity, OleDbCommand cmd)
-//{
-//    Person c = entity as Person;
-//    if (c != null)
-//    {
-//        string sqlStr = $"Insert INTO  PersonTbl (PersonName) VALUES (@cName)";
 
-//        command.CommandText = sqlStr;
-//        command.Parameters.Add(new OleDbParameter("@cName", c.PersonName));
-//    }
-//}
-
-//protected override void CreateUpdatedSQL(BaseEntity entity, OleDbCommand cmd)
-//{
-//    Person c = entity as Person;
-//    if (c != null)
-//    {
-//        string sqlStr = $"UPDATE PersonTbl  SET PersonName=@cName WHERE ID=@id";
-
-//        command.CommandText = sqlStr;
-//        command.Parameters.Add(new OleDbParameter("@cName", c.PersonName));
-//        command.Parameters.Add(new OleDbParameter("@id", c.Id));
-//    }
-//}

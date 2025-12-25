@@ -1,6 +1,7 @@
 ﻿using Model;
 using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,5 +40,47 @@ namespace ViewModel
             UserSubject g = list.Find(item => item.Id == id);
             return g;
         }
+
+        protected override void CreateDeletedSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            UserSubject c = entity as UserSubject;
+            if (c != null)
+            {
+                string sqlStr = $"DELETE FROM User_Subject where id=@pid";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@pid", c.Id));
+            }
+        }
+
+
+        protected override void CreateInsertdSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            UserSubject c = entity as UserSubject;
+            if (c != null)
+            {
+                string sqlStr = $"Insert INTO  User_Subject (User_id,Subject_id) VALUES (@cUser_id,@cSubject_id)";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@cUser_id", c.User_id));
+                command.Parameters.Add(new OleDbParameter("@cSubject_id", c.Subject_id));
+            }
+        }
+
+        protected override void CreateUpdatedSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            UserSubject c = entity as UserSubject;
+            if (c != null)
+            {
+                string sqlStr = $"UPDATE User_Subject SET User_id=@cUser_id, Subject_id=@cSubject_id " +
+                    $" WHERE ID=@id";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@cUser_id", c.User_id.Id));
+                command.Parameters.Add(new OleDbParameter("@cExam_id", c.Subject_id.Id));
+                command.Parameters.Add(new OleDbParameter("@id", c.Id));
+            }
+        }
+        }
     }
-}
+

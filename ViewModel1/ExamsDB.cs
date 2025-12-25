@@ -1,6 +1,7 @@
 ﻿using Model;
 using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,41 +39,48 @@ namespace ViewModel
             return g;
         }
 
-        //שלב ב
-        //protected override void CreateDeletedSQL(BaseEntity entity, OleDbCommand cmd)
-        //{
-        //    Person c = entity as Person;
-        //    if (c != null)
-        //    {
-        //        string sqlStr = $"DELETE FROM PersonTbl where id=@pid";
+       
+       
+        protected override void CreateUpdatedSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            Exams c = entity as Exams;
+            if (c != null)
+            {
+                string sqlStr = $"UPDATE Exams SET Subject_id=@Subject_id, Title=@Title, " +
+                    $"Exam_date=@Exam_date WHERE ID=@id";
 
-        //        command.CommandText = sqlStr;
-        //        command.Parameters.Add(new OleDbParameter("@pid", c.Id));
-        //    }
-        //}
-        //protected override void CreateInsertdSQL(BaseEntity entity, OleDbCommand cmd)
-        //{
-        //    Person c = entity as Person;
-        //    if (c != null)
-        //    {
-        //        string sqlStr = $"Insert INTO  PersonTbl (PersonName) VALUES (@cName)";
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@Subject_id", c.Subject_id.Id));
+                command.Parameters.Add(new OleDbParameter("@Title", c.Title));
+                command.Parameters.Add(new OleDbParameter("@Exam_date", c.Exam_date));
+                command.Parameters.Add(new OleDbParameter("@id", c.Id));
+            }
 
-        //        command.CommandText = sqlStr;
-        //        command.Parameters.Add(new OleDbParameter("@cName", c.PersonName));
-        //    }
-        //}
+        }
 
-        //protected override void CreateUpdatedSQL(BaseEntity entity, OleDbCommand cmd)
-        //{
-        //    Person c = entity as Person;
-        //    if (c != null)
-        //    {
-        //        string sqlStr = $"UPDATE PersonTbl  SET PersonName=@cName WHERE ID=@id";
+        protected override void CreateDeletedSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            Exams c = entity as Exams;
+            if (c != null)
+            {
+                string sqlStr = $"DELETE FROM Exams where id=@pid";
 
-        //        command.CommandText = sqlStr;
-        //        command.Parameters.Add(new OleDbParameter("@cName", c.PersonName));
-        //        command.Parameters.Add(new OleDbParameter("@id", c.Id));
-        //    }
-        //}
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@pid", c.Id));
+            }
+        }
+        protected override void CreateInsertdSQL(BaseEntity entity, OleDbCommand cmd)
+        {
+            Exams c = entity as Exams;
+            if (c != null)
+            {
+                string sqlStr = $"Insert INTO Exams (Subject_id,Title,Exam_date) VALUES (@Subject_id,@cTitle,@Exam_date)";
+
+                command.CommandText = sqlStr;
+                command.Parameters.Add(new OleDbParameter("@Subject_id", c.Subject_id.Id));
+                command.Parameters.Add(new OleDbParameter("@Title", c.Title));
+                command.Parameters.Add(new OleDbParameter("@Exam_date", c.Exam_date));
+            }
+        }
     }
 }
