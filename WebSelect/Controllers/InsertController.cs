@@ -6,7 +6,7 @@ using ViewModel;
 
 namespace API_Project.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class InsertController : ControllerBase
     {
